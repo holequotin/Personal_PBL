@@ -9,12 +9,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Personal_PBL.DAO;
+using Personal_PBL.DTO;
 
 namespace Personal_PBL
 {
     public partial class fAdmin : Form
     {
         BindingSource foodList = new BindingSource();
+        private int selected_id = 0;
+        private string name;
+        private float price;
         public fAdmin()
         {
             InitializeComponent();
@@ -52,10 +56,7 @@ namespace Personal_PBL
         private void LoadListFood()
         {
             foodList.DataSource = FoodDAO.Instance.GetListFood();
-        }
-        private void InsertFood()
-        {
-            //insert here
+            drvFood.Columns["id"].Visible = false;
         }
         private void btnFoodShow_Click(object sender, EventArgs e)
         {
@@ -68,10 +69,9 @@ namespace Personal_PBL
             f.ShowDialog();
             LoadListFood();
         }
-
-        private void txtFoodID_TextChanged(object sender, EventArgs e)
+        private void LoadImage()
         {
-            int idFood = Convert.ToInt32(txtFoodID.Text);
+            int idFood = selected_id;
             byte[] arr = FoodDAO.Instance.GetImageByID(idFood);
             if (arr == null)
             {
@@ -79,9 +79,14 @@ namespace Personal_PBL
             }
             else
             {
-                MemoryStream mstream  = new MemoryStream(arr);
+                MemoryStream mstream = new MemoryStream(arr);
                 picFoodImage.Image = Image.FromStream(mstream);
             }
+        }
+        private void txtFoodID_TextChanged(object sender, EventArgs e)
+        {
+            selected_id = Convert.ToInt32(txtFoodID.Text);
+            LoadImage();
         }
 
         private void btnFoodDelete_Click(object sender, EventArgs e)
@@ -97,6 +102,7 @@ namespace Personal_PBL
 
         private void btnFoodUpdate_Click(object sender, EventArgs e)
         {
+
             if (btnFoodUpdate.Text.Equals("Sửa"))
             {
                 btnFoodUpdate.Text = "Lưu";
@@ -106,18 +112,45 @@ namespace Personal_PBL
                 nmrFoodPrice.ReadOnly = false;
                 nmrFoodNumber.ReadOnly = false;
                 btnBrowse.Visible = true;
+
+                name = txtFoodName.Text;
+                price = (float)nmrFoodPrice.Value;
             }
             else
             {
                 btnFoodUpdate.Text = "Sửa";
-                //Lưu thông tin mới ở đây
+                if (txtFoodName.Text.Trim().Equals(name) && nmrFoodPrice.Value.ToString().Equals(price.ToString()))
+                {
+                    MessageBox.Show("Chỉ update");
+                    Category category = cbbFoodCategory.SelectedItem as Category;
+                    FoodDAO.Instance.UpdateFood(selected_id, category.Id, (int)nmrFoodNumber.Value, picFoodImage.Image);
+                }
+                else
+                {
+                    MessageBox.Show("Xóa và thêm món tương tự");
+                    FoodDAO.Instance.DeleteFood(selected_id);
+                    Category category = cbbFoodCategory.SelectedItem as Category;
+                    FoodDAO.Instance.InsertFood(txtFoodName.Text.Trim(), category.Id, (float)nmrFoodPrice.Value, (int)nmrFoodNumber.Value, picFoodImage.Image);
+                }
                 txtFoodName.ReadOnly = true;
                 cbbFoodCategory.Enabled = false;
                 nmrFoodPrice.ReadOnly = true;
                 nmrFoodNumber.ReadOnly = true;
                 btnBrowse.Visible = false;
+                LoadListFood();
             }
         }
 
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    picFoodImage.Image = Image.FromFile(ofd.FileName);//add file from fileDialog
+                }
+            }
+            //note
+        }
     }
 }
