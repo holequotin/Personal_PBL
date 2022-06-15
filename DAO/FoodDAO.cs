@@ -56,7 +56,7 @@ namespace Personal_PBL.DAO
                 arr = (byte[])converter.ConvertTo(image, typeof(byte[]));
 
                 DataProvider.Instance.ExecuteNonQuery("insert into Food (displayName,idCategory,price,number,image,exist) values ( @displayName , @idCategory , @price , @number , @image , @exist )",new object[] {name,idCategory,price,number,arr,1});
-                MessageBox.Show("Thêm món ăn thành công");
+                //MessageBox.Show("Thêm món ăn thành công");
             }catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -81,6 +81,21 @@ namespace Personal_PBL.DAO
         public void DeleteFood(int idFood)
         {
             DataProvider.Instance.ExecuteNonQuery($"update Food set exist = 0 where id = {idFood}");
+        }
+        public void UpdateFood(int idFood,int idCategory,int number,Image image)
+        {
+            try
+            {
+                byte[] arr;
+                ImageConverter converter = new ImageConverter();
+                arr = (byte[])converter.ConvertTo(image, typeof(byte[]));
+
+                DataProvider.Instance.ExecuteNonQuery($"update Food set idCategory = @idCategory , number = @number , image = @image where id = @id ", new object[] { idCategory, number, arr, idFood });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

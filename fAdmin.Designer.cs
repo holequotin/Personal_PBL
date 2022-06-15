@@ -138,6 +138,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dtpkDateTo = new System.Windows.Forms.DateTimePicker();
             this.dtpkDataFrom = new System.Windows.Forms.DateTimePicker();
+            this.panel36 = new System.Windows.Forms.Panel();
             this.tcAdmin.SuspendLayout();
             this.tpFood.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -340,6 +341,7 @@
             this.btnBrowse.Text = "Browse";
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Visible = false;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // picFoodImage
             // 
@@ -365,6 +367,11 @@
             // 
             this.nmrFoodNumber.Location = new System.Drawing.Point(125, 15);
             this.nmrFoodNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.nmrFoodNumber.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
             this.nmrFoodNumber.Name = "nmrFoodNumber";
             this.nmrFoodNumber.ReadOnly = true;
             this.nmrFoodNumber.Size = new System.Drawing.Size(269, 32);
@@ -471,6 +478,7 @@
             // 
             // panel7
             // 
+            this.panel7.Controls.Add(this.panel36);
             this.panel7.Controls.Add(this.txtFoodID);
             this.panel7.Controls.Add(this.label3);
             this.panel7.Location = new System.Drawing.Point(7, 5);
@@ -1353,6 +1361,14 @@
             this.dtpkDataFrom.Size = new System.Drawing.Size(130, 26);
             this.dtpkDataFrom.TabIndex = 0;
             // 
+            // panel36
+            // 
+            this.panel36.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel36.Location = new System.Drawing.Point(0, 0);
+            this.panel36.Name = "panel36";
+            this.panel36.Size = new System.Drawing.Size(399, 59);
+            this.panel36.TabIndex = 2;
+            // 
             // fAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -1550,5 +1566,6 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Panel panel35;
+        private System.Windows.Forms.Panel panel36;
     }
 }
